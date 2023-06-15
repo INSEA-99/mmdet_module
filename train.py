@@ -10,12 +10,19 @@ from mmengine.registry import RUNNERS
 from mmengine.runner import Runner
 
 from mmdet.utils import setup_cache_size_limit_of_dynamo
-from mmyolo.utils import is_metainfo_lower
+#from mmyolo.utils import is_metainfo_lower
+
+from utils.update import update_data_cfg, update_after_merge
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
-    parser.add_argument('config', help='train config file path')
+    parser.add_argument('--config',
+                        default= './mmdetection/configs/cascade_rcnn/cascade-rcnn_r50_fpn_1x_coco.py',
+                        help='train config file path')
+    parser.add_argument('--data_info_file',
+                        default='./data_config/info.yaml',
+                        help='train config file path')
     parser.add_argument('--work-dir', help='the dir to save logs and models')
     parser.add_argument(
         '--amp',
@@ -69,9 +76,16 @@ def main():
 
     # load config
     cfg = Config.fromfile(args.config)
+    cfg['classes'] = tuple()
     cfg.launcher = args.launcher
-    if args.cfg_options is not None:
-        cfg.merge_from_dict(args.cfg_options)
+
+    if args.data_info_file is not None:
+        options = update_data_cfg(cfg, args.data_info_file)
+        cfg.merge_from_dict(options, False)
+        cfg = update_after_merge(cfg)
+    # if args.cfg_options is not None:
+    #     cfg.merge_from_dict(args.cfg_options)
+
 
     # work_dir is determined in this priority: CLI > segment in file > filename
     if args.work_dir is not None:
@@ -118,19 +132,18 @@ def main():
         cfg.load_from = args.resume
 
     # Determine whether the custom metainfo fields are all lowercase
-    is_metainfo_lower(cfg)
-    
+    #is_metainfo_lower(cfg)
     # build the runner from config
-    if 'runner_type' not in cfg:
-        # build the default runner
-        runner = Runner.from_cfg(cfg)
-    else:
-        # build customized runner from the registry
-        # if 'runner_type' is set in the cfg
-        runner = RUNNERS.build(cfg)
+    # if 'runner_type' not in cfg:
+    #     # build the default runner
+    #     runner = Runner.from_cfg(cfg)
+    # else:
+    #     # build customized runner from the registry
+    #     # if 'runner_type' is set in the cfg
+    #     runner = RUNNERS.build(cfg)
 
     # start training
-    runner.train()
+    #runner.train()
 
 
 if __name__ == '__main__':
