@@ -13,7 +13,6 @@ def update_data_cfg(cfg, data_info_file):
 
     with open(data_info_file) as f:
         data = yaml.load(f, Loader=SafeLoader)
-        print(data)
         
     options['classes'] = tuple(data['classes'])
     options['train_dataloader.dataset.data_root'] = data['data_root']
@@ -38,12 +37,12 @@ def update_after_merge(cfg):
     if 'bbox_head' in cfg['model']:
         if isinstance(cfg['model']['bbox_head'], list):
             for head in cfg['model']['bbox_head']:
-                head['num_classes'] = cfg['classes'].size()
-        else: cfg['model']['bbox_head']['num_classes'] = cfg['classes'].size()
+                head['num_classes'] = len(cfg['classes'])
+        else: cfg['model']['bbox_head']['num_classes'] = len(cfg['classes'])
     else :
         if isinstance(cfg['model']['roi_head']['bbox_head'], list):
             for head in cfg['model']['roi_head']['bbox_head']:
                 head['num_classes'] = len(cfg['classes'])
-        else: cfg['model']['roi_head']['bbox_head']['num_classes'] = cfg['classes'].size()
+        else: cfg['model']['roi_head']['bbox_head']['num_classes'] = len(cfg['classes'])
     
     return cfg
