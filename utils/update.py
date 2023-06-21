@@ -8,7 +8,7 @@ from yaml.loader import SafeLoader
 #  'val_ann_file': 'annotations/val.json', 
 #  'val_data_prefix': 'images/val/'}
 
-def update_data_cfg(cfg, data_info_file):
+def update_data_cfg(data_info_file):
     options = {}
 
     with open(data_info_file) as f:

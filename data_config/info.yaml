@@ -1,7 +1,0 @@
-classes: ['a', 'b', 'c', 'd', 'e', 'f']
-data_root: './fst_coco/'
-train_ann_file: 'annotations/train.json'
-train_data_prefix: 'images/train/'
-val_ann_file: 'annotations/val.json'
-val_data_prefix: 'images/val/'
-

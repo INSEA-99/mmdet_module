@@ -1,0 +1,7 @@
+classes: ['hz', 'bz', 'chem']
+data_root: '/home/inbada/mars_module/mmdet_module/coco_format_data/'
+train_ann_file: 'annotations/train.json'
+train_data_prefix: 'train/'
+val_ann_file: 'annotations/val.json'
+val_data_prefix: 'val/'
+
