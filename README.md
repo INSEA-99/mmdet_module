@@ -1,34 +1,67 @@
-# mmdet_module
+Detection Module including mmdet, mmyolo
+============
 
+Usage
+------------
+1. [Setup](#Setup)
+2. [Data Preparation](#Data-Preparation)
+3. [Execution Instructions](#Execution-Instructions)
+  
+### Setup
 ```
 conda create --name openmmlab python=3.8 -y
 conda activate openmmlab
 ```
+```
+conda install pytorch torchvision -c pytorch
+pip install -e .
+```
+  
+### Data Preparation
+Prepare COCO format dataset
 
 ```
-conda install pytorch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 pytorch-cuda=11.6 -c pytorch -c nvidia
-```
+coco_root_dir
+    ├── annotations
+    │   ├── train.json 
+    │   └── val.json
+    ├── train 
+    │   ├── image1.jpg 
+    │   ├── image2.jpg
+    │        '''
+    └── val
+        ├── image3.jpg 
+        ├── image4.jpg
+             '''
 
 ```
-#pip install -r requirements.txt
--------------------------------------------
-pip install -r requirements/albu.txt
-pip install -U openmim
-mim install -r requirements/mminstall.txt
--------------------------------------------
-
-<!-- pip install -U openmim
-mim install mmengine
-mim install "mmcv>=2.0.0"
-
-
-# pip install "mmsegmentation>=1.0.0"
-mim install mmdet -->
+you can use 'labelme_to_coco.py' to convert labelme format to coco format.
 ```
-
-
+python labelme_to_coco.py root_dir classes --save_dir --split_ratio
+python labelme_to_coco.py ./labelme_root_dir cat dog bird
 ```
-# mim download mmsegmentation --config pspnet_r50-d8_4xb2-40k_cityscapes-512x1024 --dest .
-mim download mmdet --config rtmdet_tiny_8xb32-300e_coco --dest .
+root_dir must have labelme json files and images.  
 ```
-
+root_dir
+    ├── image1.jpg
+    ├── image1.json
+    ├── image2.jpg
+    ├── image2.json
+          '''
+```
+  
+### Execution Instructions
+create model
+```
+# model_type can be : mmdet, mmseg, mmpose
+# mmdet-model_name can be :
+# cascade_rcnn, dino-4scale, dino-5scale, rtmdet_tiny, rtmdet_x, yolox_l, yolov7_l, yolov8_l
+model = create_model(model_type = "mmdet", 
+                     model_name = "cascade_rcnn", 
+                     data_root= '/home/inbada/mars_module/mars/mars/mmdetection/coco_format_data/', 
+                     classes = ('hz', 'bz', 'chem'))
+```
+```
+model.train()
+model.test()
+```
